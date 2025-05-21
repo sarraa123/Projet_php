@@ -13,10 +13,13 @@ class RendezVous {
         return $stmt->fetchAll();
     }
 
-    public function ajouter($id_client, $id_medecin, $date_rdv) {
-        $stmt = $this->pdo->prepare("INSERT INTO rendezvous(id_client, id_medecin, date_rdv) VALUES (?, ?, ?)");
-        return $stmt->execute([$id_client, $id_medecin, $date_rdv]);
-    }
+    public function ajouter($nom, $prenom, $documents, $id_medecin, $date_heure) {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO rendezvous (patient_nom, patient_prenom, documents, id_medecin, date_heure) 
+                VALUES (?, ?, ?, ?, ?)
+            ");
+            return $stmt->execute([$nom, $prenom, $documents, $id_medecin, $date_heure]);
+        }
 
     public function supprimer($id) {
         $stmt = $this->pdo->prepare("DELETE FROM rendezvous WHERE id = ?");

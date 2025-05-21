@@ -22,10 +22,30 @@ class ClientController {
         include __DIR__ . '/../view/liste_medecins.php';
     }
 
-    public function prendreRdv() {
-        $rdv = new RendezVous();
+public function prendreRdv() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $rdv->ajouter($_POST['id_client'], $_POST['id_medecin'], $_POST['date_rdv']);
+            $nom = $_POST['patient_nom'];
+            $prenom = $_POST['patient_prenom'];
+            $id_medecin = $_POST['id_medecin'];
+            $date_heure = $_POST['date_heure'];
+
+            // Gestion de l'upload de fichier
+            $documents = '';
+            if (isset($_FILES['documents']) && $_FILES['documents']['error'] === UPLOAD_ERR_OK) {
+                $targetDir = __DIR__ . '/../uploads/';
+                if (!is_dir($targetDir)) {
+                    mkdir($targetDir, 0777, true);
+                }
+                $fileName = basename($_FILES['documents']['name']);
+                $targetFilePath = $targetDir . $fileName;
+                move_uploaded_file($_FILES['documents']['tmp_name'], $targetFilePath);
+                $documents = $fileName;
+            }
+
+
+            $rdv = new RendezVous();
+            $rdv->ajouter($nom, $prenom, $documents, $id_medecin, $date_heure);
+            echo "<p>Rendez-vous enregistré avec succès.</p>";
         }
         include __DIR__ . '/../view/prendre_rdv.php';
     }
