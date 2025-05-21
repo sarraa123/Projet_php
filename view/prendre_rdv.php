@@ -1,5 +1,11 @@
 <h2>Prendre rendez-vous</h2>
+<?php
+if (!isset($id_client)) {
+    $id_client = '1'; // Valeur par défaut si jamais
+}
+?>
 <form method="post" enctype="multipart/form-data" class="rdv-form">
+    <input type="hidden" name="id_client" value="<?= htmlspecialchars($id_client) ?>">
     <label for="patient_nom">Nom :</label>
     <input type="text" id="patient_nom" name="patient_nom" required>
 
