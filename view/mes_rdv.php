@@ -6,15 +6,19 @@
   <table>
     <thead>
       <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
         <th>ID Médecin</th>
-        <th>Date du rendez-vous</th>
+        <th>Date et Heure du rendez-vous</th>
       </tr>
     </thead>
     <tbody>
       <?php foreach ($liste as $rdv): ?>
         <tr>
+          <td><?= htmlspecialchars($rdv['patient_nom']) ?></td>
+          <td><?= htmlspecialchars($rdv['patient_prenom']) ?></td>
           <td><?= htmlspecialchars($rdv['id_medecin']) ?></td>
-          <td><?= htmlspecialchars($rdv['date_rdv']) ?></td>
+          <td><?= htmlspecialchars($rdv['date_heure']) ?></td>
         </tr>
       <?php endforeach; ?>
     </tbody>
@@ -22,7 +26,6 @@
 <?php endif; ?>
 
 <style>
-
 table {
   width: 100%;
   border-collapse: separate;
@@ -49,6 +52,4 @@ tbody tr:hover {
   background-color: #dbeafe; /* bleu plus clair */
   transition: background-color 0.3s ease;
 }
-
-
 </style>

@@ -10,6 +10,6 @@ class Ordonnance {
     public function getByClient($id_client) {
         $stmt = $this->pdo->prepare("SELECT * FROM ordonnances WHERE id_client = ?");
         $stmt->execute([$id_client]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); // pour que ce soit un tableau associatif
     }
 }

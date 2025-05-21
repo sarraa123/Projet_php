@@ -2,6 +2,7 @@
 require_once __DIR__ . '/Database.php';
 
 class Client {
+    
     private $pdo;
     public function __construct() {
         $this->pdo = Database::connect();

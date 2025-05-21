@@ -23,32 +23,43 @@ class ClientController {
     }
 
 public function prendreRdv() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nom = $_POST['patient_nom'];
-            $prenom = $_POST['patient_prenom'];
-            $id_medecin = $_POST['id_medecin'];
-            $date_heure = $_POST['date_heure'];
+    // Exemple : récupère l'id_client depuis $_GET ou fixe une valeur pour tester
+    $id_client = isset($_GET['id_client']) ? $_GET['id_client'] : '1'; // changer ici selon ton contexte
 
-            // Gestion de l'upload de fichier
-            $documents = '';
-            if (isset($_FILES['documents']) && $_FILES['documents']['error'] === UPLOAD_ERR_OK) {
-                $targetDir = __DIR__ . '/../uploads/';
-                if (!is_dir($targetDir)) {
-                    mkdir($targetDir, 0777, true);
-                }
-                $fileName = basename($_FILES['documents']['name']);
-                $targetFilePath = $targetDir . $fileName;
-                move_uploaded_file($_FILES['documents']['tmp_name'], $targetFilePath);
-                $documents = $fileName;
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $id_client = $_POST['id_client']; // récupéré du formulaire caché
+        $nom = $_POST['patient_nom'];
+        $prenom = $_POST['patient_prenom'];
+        $id_medecin = $_POST['id_medecin'];
+        $date_heure = $_POST['date_heure'];
+
+        // Gestion upload fichier (idem)
+
+        $documents = '';
+        if (isset($_FILES['documents']) && $_FILES['documents']['error'] === UPLOAD_ERR_OK) {
+            $targetDir = __DIR__ . '/../uploads/';
+            if (!is_dir($targetDir)) {
+                mkdir($targetDir, 0777, true);
             }
-
-
-            $rdv = new RendezVous();
-            $rdv->ajouter($nom, $prenom, $documents, $id_medecin, $date_heure);
-            echo "<p>Rendez-vous enregistré avec succès.</p>";
+            $fileName = basename($_FILES['documents']['name']);
+            $targetFilePath = $targetDir . $fileName;
+            move_uploaded_file($_FILES['documents']['tmp_name'], $targetFilePath);
+            $documents = $fileName;
         }
-        include __DIR__ . '/../view/prendre_rdv.php';
+
+        $rdv = new RendezVous();
+        $success = $rdv->ajouter($id_client, $nom, $prenom, $documents, $id_medecin, $date_heure);
+
+        if ($success) {
+            echo "<p>Rendez-vous enregistré avec succès.</p>";
+        } else {
+            echo "<p>Erreur lors de l'enregistrement du rendez-vous.</p>";
+        }
     }
+
+    include __DIR__ . '/../view/prendre_rdv.php';
+}
+
 
     public function mesRdv() {
         $rdv = new RendezVous();
@@ -56,9 +67,10 @@ public function prendreRdv() {
         include __DIR__ . '/../view/mes_rdv.php';
     }
 
-    public function mesOrdonnances() {
-        $ord = new Ordonnance();
-        $liste = $ord->getByClient($_GET['id_client']);
-        include __DIR__ . '/../view/mes_ordonnances.php';
-    }
+public function mesOrdonnances() {
+    $ord = new Ordonnance();
+    $ordonnances = $ord->getByClient($_GET['id_client']);
+    include __DIR__ . '/../view/mes_ordonnances.php';
+}
+    
 }
